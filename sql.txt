@@ -1,0 +1,68 @@
+CREATE DATABASE lu_ban;
+
+USE lu_ban;
+
+DROP TABLE IF EXISTS project;
+CREATE TABLE project (
+    id              BIGINT(20)          NOT NULL            AUTO_INCREMENT          COMMENT '自动编号',
+    name            VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '项目名称',
+    chinese_name    VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '中文名称',
+    principal       VARCHAR(32)         NOT NULL            DEFAULT ''              COMMENT '项目负责人',
+    url             VARCHAR(32)         NOT NULL            DEFAULT ''              COMMENT '应用域名',
+    type            SMALLINT(4)         NOT NULL            DEFAULT 0               COMMENT '类型 0-SpringBoot',
+    dev_lang        SMALLINT(4)         NOT NULL            DEFAULT 0               COMMENT '开发语言 0-JDK1.8',
+    git_url         VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT 'git路径',
+    assemble_path   VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '编译地址',
+    assemble_command VARCHAR(128)       NOT NULL            DEFAULT ''              COMMENT '编译命令',
+    yn              SMALLINT(4)         NOT NULL            DEFAULT 1               COMMENT '数据状态 0-无效 1-有效',
+    create_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '创建人的pin',
+    update_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '修改人的pin',
+    create_time     DATETIME            NOT NULL                                    COMMENT '创建时间',
+    update_time     TIMESTAMP           NOT NULL            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+    PRIMARY KEY (id),
+    UNIQUE INDEX uniq_projectName(project_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '项目定义';
+
+DROP TABLE IF EXISTS machine;
+CREATE TABLE machine (
+    id              BIGINT(20)          NOT NULL            AUTO_INCREMENT          COMMENT '自动编号',
+    project_id      BIGINT(20)          NOT NULL            DEFAULT 0               COMMENT '项目id',
+    ip              VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT 'ip',
+    system_type     SMALLINT(4)         NOT NULL            DEFAULT 0               COMMENT '操作系统类型 0-linux 1-windows',
+    publish_version VARCHAR(64)         NOT NULL            DEFAULT ''              COMMENT '发布版本',
+    yn              SMALLINT(4)         NOT NULL            DEFAULT 1               COMMENT '数据状态 0-无效 1-有效',
+    create_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '创建人的pin',
+    update_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '修改人的pin',
+    create_time     DATETIME            NOT NULL                                    COMMENT '创建时间',
+    update_time     TIMESTAMP           NOT NULL            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+    PRIMARY KEY (id),
+    UNIQUE INDEX uniq_projectId_ip(project_id,ip)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '项目机器表';
+
+DROP TABLE IF EXISTS project_publish_history;
+CREATE TABLE project_publish_history (
+    id              BIGINT(20)          NOT NULL            AUTO_INCREMENT          COMMENT '自动编号',
+    project_id      BIGINT(20)          NOT NULL            DEFAULT 0               COMMENT '项目id',
+    publish_version VARCHAR(64)         NOT NULL            DEFAULT ''              COMMENT '发布版本',
+    yn              SMALLINT(4)         NOT NULL            DEFAULT 1               COMMENT '数据状态 0-无效 1-有效',
+    create_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '创建人的pin',
+    update_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '修改人的pin',
+    create_time     DATETIME            NOT NULL                                    COMMENT '创建时间',
+    update_time     TIMESTAMP           NOT NULL            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+    PRIMARY KEY (id),
+    UNIQUE INDEX uniq_projectId_publishVersion(project_id,publish_version)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '项目发布历史表';
+
+DROP TABLE IF EXISTS sys_dict;
+CREATE TABLE sys_dict (
+    id              BIGINT(20)          NOT NULL            AUTO_INCREMENT          COMMENT '自动编号',
+    key             VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT 'key',
+    value           VARCHAR(512)        NOT NULL            DEFAULT ''              COMMENT 'value值',
+    yn              SMALLINT(4)         NOT NULL            DEFAULT 1               COMMENT '数据状态 0-无效 1-有效',
+    create_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '创建人的pin',
+    update_pin      VARCHAR(128)        NOT NULL            DEFAULT ''              COMMENT '修改人的pin',
+    create_time     DATETIME            NOT NULL                                    COMMENT '创建时间',
+    update_time     TIMESTAMP           NOT NULL            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+    PRIMARY KEY (id),
+    UNIQUE INDEX uniq_key(key)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT '系统字典表';
